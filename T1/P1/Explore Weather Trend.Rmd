@@ -1,0 +1,114 @@
+---
+title: 'Project 1 : Expore Weather Trends'
+output: html_document
+---
+
+# Explore Weather Trends
+#### This project is aim to analyze the global and my home city Taipei's weather trends. By using  Udacity workspace to extract data and using R to analyze. 
+#### *The submission will be submitted as a markdown version of HTML file.    
+
+#### The project contains following four parts:       
+1. [Extract data](#1. )   
+2. [Calculate moving average](#2.)   
+3. [Visualization](#3.)   
+4. [Observation](#4.)   
+5. [Reference](#5.)   
+
+## 1. Extract data
+
+I used following SQL to extract target data from the database :  
+  
+    SELECT *
+		FROM city_data
+	    WHERE country = 'Taiwan' AND city = 'Taipei'
+	   	ORDER BY year
+   
+    SELECT *
+		FROM global_data
+	   	ORDER BY year
+  
+## 2. Calculate moving average
+
+After I downloaded those csv data, I loaded them to R studio and took a brief observation.
+```{r observation}
+# load the visualize package
+library(ggplot2)
+library(dplyr)
+library(zoo)
+
+# get the working directory
+getwd()
+# load the csv data
+Taipei <- read.csv("city_data.csv")
+Global <- read.csv("global_data.csv")
+
+# === observe and clean the data
+# observe data
+str(Taipei)
+str(Global)
+tail(Taipei)
+tail(Global)
+
+# drop the redundant data
+Taipei <- Taipei[,-(2:3)]
+
+# see if there got missing value 
+sapply(Taipei, function(x) {sum(is.na(x))})
+sapply(Global, function(x) {sum(is.na(x))})
+``` 
+I calculated the moving average and created a new data frame containing the value of moving averages.
+```{r calculate}
+# === calculate the moving averages
+# year data
+MA_T <- Taipei[7:173,1]
+MA_G <- Global[7:266,1]
+
+# moving average
+MA_taipei <- rollapply(Taipei$avg_temp, 7, mean)
+MA_global <- rollapply(Global$avg_temp, 7, mean)
+
+# bind year data and moving averages
+MA_T <- cbind(MA_T, MA_taipei)
+MA_G <- cbind(MA_G, MA_global)
+MA_T <- MA_T %>% as.data.frame()
+MA_G <- MA_G %>% as.data.frame()
+
+# merge 2 dataframes
+colnames(MA_T) <- c('year', 'MA_taipei')
+colnames(MA_G) <- c('year', 'MA_global')
+all <- merge(MA_T, MA_G, by = 'year', all = TRUE)
+all <- na.omit(all)
+head(all)
+```
+## 3. Visualization
+
+After getting moving averages, I plotted two graphs to observe global data and Taipei's data respectively and one graph to take comparison of them.     
+```{r visualization, echo=FALSE}
+# === visualization
+P1 <- ggplot(MA_T, aes(year, MA_taipei)) +
+  geom_line(aes(y = MA_taipei)) +
+  ggtitle("Taipei moving average temperature ")
+P2 <- ggplot(MA_G, aes(year, MA_global)) +
+  geom_line(aes(y = MA_global)) +
+  ggtitle("Global moving average temperature ")
+P3 <- ggplot(all, aes(year, moving_avg_temp)) + 
+  geom_line(aes(y = MA_taipei, colour = "MA_taipei")) +
+  geom_line(aes(y = MA_global, colour = "MA_global")) +
+  ggtitle("The moving average temperature of Taipei and global")
+P1
+P2
+P3
+```
+
+## 4. Observation
+
+According to the graphs, there are some  parts I would like to mention  : 
+
+1. The average moving temperature of two dataset are **much various** to each other. As the global average moving temperature is always lower than 10 degree Celcius, Taipei's average moving temperature is roughly between 21 degree Celsius and 23 degree Celsius, since it is located in the subtropical.    
+2. Whether it is global or Taipei ,the temperature has gradually **increased** since **1900**.  
+3. **Between 1750 and 1850**, the global moving average temperature **fluctuate very much**. It will be quite interesting to take a further research about it.  
+4. Compared with the global moving average, Taipei's moving temperature changing tend to be **fluctuant** after **1850**.  
+
+## 5. Reference
+
+1. https://blog.stranity.com.tw/2016/08/29/388/
