@@ -1,7 +1,7 @@
 # Nano_degree_DAND_Udacity
 
 Hi every, I am Weber Huang.  I am learning data analysis.  
-This page contains the project from my Udacity DAND online course. 
+This page contains the project from my Udacity Data Analyst Nano Degree(DAND) online course. 
 
 Here below are links to my projects. Please feel free to giving me any suggestion about my works:   
 * 1.[Explore Weather Trend](https://github.com/Weber12321/Nano_degree_DAND_Udacity/blob/master/Term_1/Project%20I%20_Explore%20Weather%20Trends/Explore_Weather_Trend.html)   
