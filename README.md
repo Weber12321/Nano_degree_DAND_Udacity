@@ -1,6 +1,5 @@
 # Nano_degree_DAND_Udacity
-hr()
 
-Hi every, I am Weber Huang.   
+Hi every, I am Weber Huang.  I am learning data analysis.  
 This page contains the project from my Udacity DAND online course.  
 
