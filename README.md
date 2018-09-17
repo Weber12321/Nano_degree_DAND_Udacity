@@ -1,6 +1,6 @@
 # Nano_degree_DAND_Udacity
 
-Hi every, I am Weber Huang.  I am learning data analysis.  
+Hi everyone, I am Weber Huang.  I am learning data analysis.  
 This page contains the project from my Udacity Data Analyst Nano Degree(DAND) online course. 
 
 Here below are links to my projects. They are accomplished by SQL, R and python. Please feel free to giving me any suggestion about my works:   
